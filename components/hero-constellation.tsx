@@ -41,7 +41,8 @@ export function HeroConstellation() {
             </div>
 
             <div id="waitlist" className="mt-8 max-w-md">
-              < JoinForm/> <p className="text-xs text-white/50 mt-2">
+              <JoinForm />
+              <p className="text-xs text-white/50 mt-2">
                 Mutual NDAs + on-chain idea hashes to prove authorship and deter copying.
               </p>
             </div>
@@ -67,7 +68,7 @@ export function HeroConstellation() {
 }
 
 function DuoOrbs() {
-  const ref = useRef<HTMLDivElement | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const [hover, setHover] = useState(false)
 
   useEffect(() => {
@@ -76,6 +77,9 @@ function DuoOrbs() {
     let raf = 0
 
     function onMove(e: PointerEvent) {
+      // Additional null check inside the event handler for extra safety
+      if (!el) return
+      
       const rect = el.getBoundingClientRect()
       const x = (e.clientX - rect.left) / rect.width
       const y = (e.clientY - rect.top) / rect.height
@@ -88,7 +92,9 @@ function DuoOrbs() {
 
     el.addEventListener("pointermove", onMove)
     return () => {
-      el.removeEventListener("pointermove", onMove)
+      if (el) {
+        el.removeEventListener("pointermove", onMove)
+      }
       cancelAnimationFrame(raf)
     }
   }, [])
